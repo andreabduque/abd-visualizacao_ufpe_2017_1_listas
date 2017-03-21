@@ -7,13 +7,13 @@
     <body>
       <center>
           <svg width="700" height="700">
-            <g transform="translate(0, 700) scale(1, -1)">
+             <g transform="translate(0, 700) scale(1, -1)">
               <!--Brasil -->
               <!-- x = (700-488)/2 -->
               <rect x="106" y="350" width="488" height="343" style="fill:#007600; "/>
 
               <!-- USA -->
-              <rect x="23" y="156" width="257" height="182" style="fill:#002868; "/>
+              <rect x="23" y="156" width="257" height="182" style="fill:#002766; "/>
               <g fill="#BF0A30">
                 <rect x="23" y="0" width="653" height="26"/>
                 <rect x="23" y="52" width="653" height="26"/>
@@ -26,8 +26,36 @@
 
                 <!--centro estrela: x=23+22 y=175+18-->
                 <!--raio estrela: 10 -->
-                <circle cx="45" cy="174" r="10" fill="black" />
+                <!--polygon id="star" points="45,184 39,166 55,177, 35,177 51,166" fill="white"/-->
                 <polygon id="star" points="45,184 39,166 55,177, 35,177 51,166" fill="white"/>
+
+                <g id="5star">
+                    <!--circle cx="45" cy="174" r="10" fill="black" /-->
+                    <use xlink:href="#star"/>
+                    <use xlink:href="#star" transform="translate(0,38)" />
+                    <use xlink:href="#star" transform="translate(0,76)" />
+                    <use xlink:href="#star" transform="translate(0,114)" />
+                    <use xlink:href="#star" transform="translate(0,152)" />
+                </g>
+
+                <g id="4star">
+                    <!-- <circle cx="67" cy="193" r="10" fill="black" /> -->
+                    <use xlink:href="#star" transform="translate(22,19)" />
+                    <use xlink:href="#star" transform="translate(22,57)" />
+                    <use xlink:href="#star" transform="translate(22,95)" />
+                    <use xlink:href="#star" transform="translate(22,133)" />
+                </g>
+
+                 <use xlink:href="#5star" transform="translate(44,0)" />
+                 <use xlink:href="#5star" transform="translate(88,0)" />
+                 <use xlink:href="#5star" transform="translate(132,0)" />
+                 <use xlink:href="#5star" transform="translate(176,0)" />
+                 <use xlink:href="#5star" transform="translate(220,0)" />
+
+                 <use xlink:href="#4star" transform="translate(44,0)" />
+                 <use xlink:href="#4star" transform="translate(88,0)" />
+                 <use xlink:href="#4star" transform="translate(132,0)" />
+                 <use xlink:href="#4star" transform="translate(176,0)" />
 
               </g>
             </g>
