@@ -10,7 +10,21 @@
              <g transform="translate(0, 700) scale(1, -1)">
               <!--Brasil -->
               <!-- x = (700-488)/2 -->
-              <rect x="106" y="350" width="488" height="343" style="fill:#007600; "/>
+               <g id="Brasil" transform="translate(106, 350)">
+                 <rect x="0" y="0" width="488" height="343" style="fill:#00A859; "/>
+                 <!-- <polygon id="triangle" points = "20.4,171 244,171 244,323.6" fill="#FEDE00"/> -->
+                 <polygon id="triangle" points = "40.4,171 244,171 244,297.6" fill="#FFCC29"/>
+                 <use xlink:href="#triangle" transform="scale(1,-1) translate(0, -343)"/>
+                 <use xlink:href="#triangle" transform="scale(-1,1) translate(-488, 0)"/>
+                 <use xlink:href="#triangle" transform="scale(-1,-1) translate(-488, -343)"/>
+
+                 <circle  cx="244" cy="171" r="86"  fill ="#3E4095" />
+
+                 <!-- <polygon id="triangle2" points = "244,323.6 244,171 467.6,171" fill="#FEFE00"/> -->
+
+               </g>
+              <!-- <rect x="106" y="350" width="488" height="343" style="fill:#007600; "/> -->
+              <!-- <polygon id="triangle" points = "20.4,171 244,171 244,323.6" fill="yellow"/> -->
 
               <!-- USA -->
               <rect x="23" y="156" width="257" height="182" style="fill:#002766; "/>
