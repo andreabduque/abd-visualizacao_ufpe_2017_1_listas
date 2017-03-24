@@ -69,7 +69,7 @@ circleScale = d3.scaleOrdinal()
                     .range(["#294a66","#8c8012","#5b0b0b"]);
 
 //Line function
-var linePath =  d3.line().curve(d3.curveBasis)
+var linePath =  d3.line().curve(d3.curveLinear)
                           .x(function(d) {return xScale(parseTime(d[1])); })
                           .y(function(d) {return yScale(d[0]); });
 //Drawing Lines
