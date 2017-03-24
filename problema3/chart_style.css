@@ -10,3 +10,21 @@
 .axis text {
 	fill: #666;
 }
+
+
+.grid line, .grid path {
+  stroke: lightgrey;
+  stroke-opacity: 0.7;
+  shape-rendering: auto;
+  stroke-width: 2;
+}
+/*
+.grid path {
+  stroke-width: 2;
+} */
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 2px;
+}
