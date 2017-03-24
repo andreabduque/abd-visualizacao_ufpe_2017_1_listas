@@ -9,3 +9,7 @@
 .axis text {
 	fill: #666;
 }
+
+.textnumber text {
+  fill: #fff;
+}
