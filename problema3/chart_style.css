@@ -1,0 +1,12 @@
+
+.axis line, .axis path {
+    fill: none;
+    stroke: black;
+    shape-rendering: auto;
+    stroke-width: 1.5px;
+    visibility: hidden;
+}
+
+.axis text {
+	fill: #666;
+}
