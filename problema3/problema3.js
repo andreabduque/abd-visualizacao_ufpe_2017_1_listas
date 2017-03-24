@@ -41,14 +41,14 @@ mySVG
 var xAxisGroup = mySVG.append("g")
                       .attr("class","axis")
                       //.attr("transform", "translate(0,"+(height-margin.top)+")");
-                      .attr("transform", "translate(" + 10  + ","+margin.top+")");
+                      .attr("transform", "translate(" + 0  + ","+margin.top+")");
 
 var yAxisGroup = mySVG.append("g")
                       .attr("class","axis")
-                      .attr("transform", "translate("+(margin.left )+"," + 10 +")");
+                      .attr("transform", "translate("+(margin.left )+"," + 0 +")");
 
-var xAxis = d3.axisBottom(xScale).tickSize(0).ticks(11).tickFormat(d3.timeFormat("%b")).tickPadding(-15);
-var yAxis = d3.axisLeft(yScale).ticks(8).tickSize(0);
+var xAxis = d3.axisBottom(xScale).tickSize(height-margin.bottom - margin.top - 8).tickPadding(-height + 20).ticks(11).tickFormat(d3.timeFormat("%b"));
+var yAxis = d3.axisRight(yScale).tickSize(width-margin.left - margin.right).tickPadding(-width).ticks(8);
 
 xAxisGroup.call(xAxis);
 yAxisGroup.call(yAxis);

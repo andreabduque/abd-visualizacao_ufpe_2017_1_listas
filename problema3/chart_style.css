@@ -1,10 +1,10 @@
 
 .axis line, .axis path {
     fill: none;
-    stroke: black;
+    stroke: #fff;
     shape-rendering: auto;
-    stroke-width: 1.5px;
-    visibility: hidden;
+    /*stroke-width: 1.5px;
+    visibility: hidden*/
 }
 
 .axis text {
@@ -12,7 +12,7 @@
 }
 
 
-.grid line, .grid path {
+.tick line{
   stroke: lightgrey;
   stroke-opacity: 0.7;
   shape-rendering: auto;
