@@ -16,10 +16,18 @@ for(var i = 0; i < 12; i++){
     dataset_avg.push([average[i] , dates[i]]);
 }
 
+dataset_avg2 = []
+for(var i = 0; i < 12; i++){
+    dataset_avg2.push([average[i] , dates[i]]);
+}
+
 dataset_high = []
 for(var i = 0; i < 12; i++){
     dataset_high.push([average_high[i] , dates[i]]);
 }
+classes = ["Low", "Avg", "High"]
+//dataset = [[dataset_low, dataset_avg, dataset_high], classes];
+dataset = [[dataset_low, "Low"], [dataset_avg, "Avg"], [dataset_high, "High"]];
 
 var margin = {top: 20, right: 20, bottom: 20, left: 20};
 var width = 600 - margin.left - margin.right;
@@ -40,38 +48,6 @@ d3.select("#chart").attr("align","left");
 xScale = d3.scaleTime().domain([parseTime("1-Jan-12"), parseTime("1-Dec-12")]).range([0+margin.left, width - margin.right]);
 yScale = d3.scaleLinear().domain([10,30]).range([height - margin.top,0 + margin.bottom]);
 
-//Avg line
-mySVG
-  .append("path")
-  .data([dataset_avg])
-  .attr("class", "line")
-  .style("stroke", "Khaki")
-  .attr("d", d3.line()
-                .curve(d3.curveBasis)
-                .x(function(d) {return xScale(parseTime(d[1])); })
-                .y(function(d) {return yScale(d[0]); }));
-//Avg low line
-mySVG
-  .append("path")
-  .data([dataset_low])
-  .attr("class", "line")
-  .style("stroke", "steelblue")
-  .attr("d", d3.line()
-                .curve(d3.curveBasis)
-                .x(function(d) {return xScale(parseTime(d[1])); })
-                .y(function(d) {return yScale(d[0]); }));
-
-//Avg low line
-mySVG
-  .append("path")
-  .data([dataset_high])
-  .attr("class", "line")
-  .style("stroke", "LightCoral")
-  .attr("d", d3.line()
-                .curve(d3.curveBasis)
-                .x(function(d) {return xScale(parseTime(d[1])); })
-                .y(function(d) {return yScale(d[0]); }));
-
 
 var xAxisGroup = mySVG.append("g")
                       .attr("class","axis")
@@ -87,3 +63,91 @@ var yAxis = d3.axisRight(yScale).tickSize(width-margin.left - margin.right).tick
 
 xAxisGroup.call(xAxis);
 yAxisGroup.call(yAxis);
+
+//Drawing function lines
+//Line colors
+colorLineScale = d3.scaleOrdinal()
+                    .domain(classes)
+                    .range(["steelblue","Khaki","LightCoral"]);
+
+//Circle colors
+circleLineScale = d3.scaleOrdinal()
+                    .domain(classes)
+                    .range(["#294a66","#8c8012","#5b0b0b"]);
+
+
+var linePath =  d3.line().curve(d3.curveBasis)
+                          .x(function(d) {return xScale(parseTime(d[1])); })
+                          .y(function(d) {return yScale(d[0]); });
+//Drawing Lines
+var lines = mySVG.selectAll(".avgs")
+                  .data(dataset)
+                  .enter()
+                  .append("g")
+                  .attr("class", "avgs");
+
+  lines.append("path")
+        .attr("class", "line")
+        .style("stroke", function(d) {return colorLineScale(d[1]); })
+        .attr("d", function (d){  return linePath( d[0].map(function(pair) {
+                  return pair;
+                }));    });
+
+
+
+//Drawing Circles
+
+/*
+//Avg low line
+mySVG
+  .append("path")
+  .data([dataset_low])
+  .attr("class", "line")
+  .style("stroke", "steelblue")
+  .attr("d", d3.line()
+                .curve(d3.curveBasis)
+                .x(function(d) {console.log(d[1]); return xScale(parseTime(d[1])); })
+                .y(function(d) {return yScale(d[0]); }));
+
+
+//Avg high line
+mySVG
+  .append("path")
+  .data([dataset_high])
+  .attr("class", "line")
+  .style("stroke", "LightCoral")
+  .attr("d", d3.line()
+                .curve(d3.curveBasis)
+                .x(function(d) {return xScale(parseTime(d[1])); })
+                .y(function(d) {return yScale(d[0]); }));
+
+
+mySVG
+  .selectAll("circle")
+  .data(dataset_low)
+  .enter()
+  .append("circle")
+  .attr("cx", function(d) { return xScale(parseTime(d[1])); })
+  .attr("cy",function(d) {return yScale(d[0]); })
+  .attr("r", 2)
+  .attr("fill", "#294a66");
+
+  mySVG
+    .selectAll("circle")
+    .data(dataset_high)
+    .enter()
+    .append("circle")
+    .attr("cx", function(d) { return xScale(parseTime(d[1])); })
+    .attr("cy",function(d) {return yScale(d[0]); })
+    .attr("r", 2)
+    .attr("fill", "#5b0b0b");
+
+mySVG
+      .selectAll("circle")
+      .data(dataset_avg2)
+      .enter()
+      .append("circle")
+      .attr("cx", function(d) { return xScale(parseTime(d[1])); })
+      .attr("cy",function(d) {return yScale(d[0]); })
+      .attr("r", 2)
+      .attr("fill", "#8c8012"); */
