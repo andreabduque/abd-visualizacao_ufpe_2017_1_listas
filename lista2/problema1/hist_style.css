@@ -1,0 +1,16 @@
+.bar  {
+  fill: mediumaquamarine;
+}
+
+.bar:hover {
+  fill: red;
+}
+
+.bar text {
+  fill: #fff;
+  font: 10px sans-serif;
+}
+
+.axis--x path {
+  display: none;
+}
