@@ -130,7 +130,34 @@ myScatter
   .attr("r", 2)
   .attr("fill", function(d) { return c_scat(d.carrier);})
 
+//Brush
+myScatter.append("g")
+      .call(d3.brush().extent([[0, 0], [width, height]]).on("brush", brushMoved).on("end", brushEnded));
 
+function brushMoved(){
+  var screenSelection = d3.event.selection;
+  myScatter.selectAll("circle").style("fill", function(d){
+    var x_pos = x_scat(diffDays(parseDate(d.start), parseDate(d.post)));
+    var y_pos =  y_scat(d.price);
+
+    if(screenSelection[0][0]<= x_pos && x_pos <= screenSelection[1][0] &&
+		   screenSelection[0][1]<= y_pos && y_pos <= screenSelection[1][1]){
+         return "brown"
+    }
+    else{
+        return c_scat(d.carrier);
+    }
+  });
+}
+
+function brushEnded(){
+  if(!d3.event.selection){
+    myScatter.selectAll("circle")
+      .style("fill", function(d){
+            return c_scat(d.carrier);
+      });
+  }
+}
 
 // // add the y Axis
 // mySVG.append("g")
