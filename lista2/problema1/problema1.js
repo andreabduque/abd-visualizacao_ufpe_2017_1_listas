@@ -193,7 +193,6 @@ function updateScatter(new_trips){
                       .data([]);
                     //  .enter();  //
 newScatter.exit().remove();
-console.log(new_trips);
   myScatter
       .selectAll("circle")
       .data(new_trips)
@@ -208,16 +207,39 @@ console.log(new_trips);
 var myDispatch = d3.dispatch("selectionChanged");
 var myDispatch2 = d3.dispatch("clickHist");
 
+var stack = [];
 myHistogram.selectAll(".bar").select("rect").on("click", function(d){
   var new_trips = [];
-  trips.forEach(function(i){
-      if(i.carrier == d.carrier){
-        new_trips.push(i);
+  if(stack == []){
+    show = true;
+    stack.push(d.carrier);
+  }
+  else{
+      last = stack.pop();
+      if( last == d.carrier){
+        show = false;
       }
-    });
+      else{
+        show = true;
+        stack.push(last);
+        stack.push(d.carrier);
+      }
+  }
+    trips.forEach(function(i){
+      if(show){
+        //Esconde
+        if(i.carrier != d.carrier){
+            new_trips.push(i);
+        }
+      }
+      else{
+        //Mostra todos
+          new_trips.push(i);
+      }
+    }
+  );
   myDispatch2.call("clickHist",{caller:"show",items:new_trips});
 });
-
 
 myDispatch.on("selectionChanged",function(){
     if(this.caller == "scatter"){
