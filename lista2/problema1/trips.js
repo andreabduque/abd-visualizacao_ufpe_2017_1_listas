@@ -1,3 +1,4 @@
+
 var trips = [{post:"04/08/2014",origin:"Recife",destination:"RiodeJaneiro",price:517,start:"29/12/2014",end:"08/01/2015",carrier:"Gol"},
 {post:"04/08/2014",origin:"Recife",destination:"RiodeJaneiro",price:580,start:"29/12/2014",end:"09/01/2015",carrier:"Gol"},
 {post:"27/07/2014",origin:"Recife",destination:"Montevideu",price:523,start:"15/09/2014",end:"25/09/2014",carrier:"Gol"},

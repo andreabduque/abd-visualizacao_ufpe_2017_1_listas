@@ -8,7 +8,6 @@ function count_trip(trips){
       }
     }
   }
-  console.log("done");
   return ntrips;
 };
 
@@ -123,17 +122,15 @@ var yAxisGroup = myScatter.append("g")
 xAxisGroup.call(d3.axisBottom(x_scat));
 yAxisGroup.call(d3.axisLeft(y_scat));
 
-
-
-myScatter
-  .selectAll("circle")
-  .data(trips)
-  .enter()
-  .append("circle")
-  .attr("cx", function(d){ return x_scat(diffDays(parseDate(d.start), parseDate(d.post))); })
-  .attr("cy", function(d) { return y_scat(d.price); })
-  .attr("r", 2)
-  .attr("fill", function(d) { return c_scat(d.carrier);})
+var teste = myScatter
+              .selectAll("circle")
+              .data(trips)
+              .enter()
+              .append("circle")
+              .attr("cx", function(d){ return x_scat(diffDays(parseDate(d.start), parseDate(d.post))); })
+              .attr("cy", function(d) { return y_scat(d.price); })
+              .attr("r", 2)
+              .attr("fill", function(d) { return c_scat(d.carrier);});
 
 //Brush
 myScatter.append("g")
@@ -142,14 +139,14 @@ myScatter.append("g")
 function brushMoved(){
   var screenSelection = d3.event.selection;
   var selectedData = [];
-  myScatter.selectAll("circle").style("fill", function(d){
+  myScatter.selectAll("circle").attr("fill", function(d){
     var x_pos = x_scat(diffDays(parseDate(d.start), parseDate(d.post)));
     var y_pos =  y_scat(d.price);
 
     if(screenSelection[0][0]<= x_pos && x_pos <= screenSelection[1][0] &&
 		   screenSelection[0][1]<= y_pos && y_pos <= screenSelection[1][1]){
          selectedData.push(d);
-         return "brown"
+         return "brown";
     }
     else{
         return c_scat(d.carrier);
@@ -162,9 +159,10 @@ function brushMoved(){
 function brushEnded(){
   if(!d3.event.selection){
     myScatter.selectAll("circle")
-      .style("fill", function(d){
+      .attr("fill", function(d){
             return c_scat(d.carrier);
       });
+      myDispatch.call("selectionChanged",{caller:"scatter",items:trips});
   }
 }
 
@@ -189,12 +187,51 @@ function updateHist(trips){
 
 }
 
+function updateScatter(new_trips){
+  var newScatter = myScatter
+                      .selectAll("circle")
+                      .data([]);
+                    //  .enter();  //
+newScatter.exit().remove();
+console.log(new_trips);
+  myScatter
+      .selectAll("circle")
+      .data(new_trips)
+      .enter()
+      .append("circle")
+      .attr("cx", function(d){ return x_scat(diffDays(parseDate(d.start), parseDate(d.post))); })
+      .attr("cy", function(d) { return y_scat(d.price); })
+      .attr("r", 2)
+      .attr("fill", function(d) { return c_scat(d.carrier);});
+};
+
 var myDispatch = d3.dispatch("selectionChanged");
+var myDispatch2 = d3.dispatch("clickHist");
+
+myHistogram.selectAll(".bar").select("rect").on("click", function(d){
+  var new_trips = [];
+  trips.forEach(function(i){
+      if(i.carrier == d.carrier){
+        new_trips.push(i);
+      }
+    });
+  myDispatch2.call("clickHist",{caller:"show",items:new_trips});
+});
+
+
 myDispatch.on("selectionChanged",function(){
-    if(this.caller === "scatter"){
+    if(this.caller == "scatter"){
       updateHist(this.items);
     }
+
 });
+
+myDispatch2.on("clickHist", function(){
+  if(this.caller == "show"){
+    updateScatter(this.items);
+  }
+});
+
 
 // // add the y Axis
 // mySVG.append("g")
