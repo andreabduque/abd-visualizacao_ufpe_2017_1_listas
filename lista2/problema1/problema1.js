@@ -234,8 +234,7 @@ myHistogram.selectAll(".bar").select("rect").on("click", function(d){
         }
       }
       else{
-        //Mostra todos
-    
+        //Mostra todos    
           new_trips.push(i);
       }
     }
