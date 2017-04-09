@@ -68,46 +68,41 @@ function brushEnded(){
     var screenSelection = d3.event.selection;
 
     if(!screenSelection){
+      console.log(screenSelection);
       mySVG.selectAll("circle").attr("fill", function(d){
           return zScale(d[2]);
       });
-
-      if(selectedData.length){
-        console.log("selecionou isso:")
-        console.log(selectedData);
-        //Update X
-        min_new = d3.min(selectedData.map( function(d){
-              return d[0]; }
-        ));
-        max_new = d3.max(selectedData.map( function(d){
-              return d[0]; }
-        ));
-        console.log([min_new, max_new]);
-        xScale.domain([Math.floor(min_new), Math.ceil(max_new)]);
-        xAxisGroup.call(xAxis)
-        //Update Y
-        min_new = d3.min(selectedData.map( function(d){
-              return d[1]; }
-        ));
-        max_new = d3.max(selectedData.map( function(d){
-              return d[1]; }
-        ));
-        yScale.domain([Math.floor(min_new), Math.ceil(max_new)]);
-        yAxisGroup.call(yAxis)
-      }
-      else{
-        xScale.domain(xDomain);
-        xAxisGroup.call(xAxis)
-        yScale.domain(yDomain);
-        yAxisGroup.call(yAxis)
-      }
       selectedData = [];
+      mySVG.selectAll("circle")
+        .attr("cx", function(d) { return xScale(d[0]); })
+        .attr("cy", function(d) { return yScale(d[1]); });
+      xAxisGroup.call(xAxis);
+      yAxisGroup.call(yAxis);
     }else{
-        console.log("nenhuma selecao");
+        if(selectedData.length){
+          console.log("selecionou isso:")
+          console.log(selectedData);
+          //Update X
+          min_new = d3.min(selectedData.map( function(d){
+                return d[0]; }
+          ));
+          max_new = d3.max(selectedData.map( function(d){
+                return d[0]; }
+          ));
+          console.log([min_new, max_new]);
+          xScale.domain([Math.floor(min_new), Math.ceil(max_new)]);
+          //Update Y
+          min_new = d3.min(selectedData.map( function(d){
+                return d[1]; }
+          ));
+          max_new = d3.max(selectedData.map( function(d){
+                return d[1]; }
+          ));
+          yScale.domain([Math.floor(min_new), Math.ceil(max_new)]);
+        }
+        else{
+          xScale.domain(xDomain);
+          yScale.domain(yDomain);
+        }
     }
-
-    mySVG.selectAll("circle")
-      .attr("cx", function(d) { return xScale(d[0]); })
-      .attr("cy", function(d) { return yScale(d[1]); });
-
 }
