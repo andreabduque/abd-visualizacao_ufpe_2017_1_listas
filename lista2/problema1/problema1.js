@@ -12,6 +12,8 @@ function count_trip(trips){
   return ntrips;
 };
 
+c_scat = d3.scaleOrdinal().range(["orange", "red", "blue"]).domain(carriers);
+
 var margin = {top: 20, right: 20, bottom: 20, left: 30};
 var width = 600 - margin.left - margin.right;
 var height = 400 - margin.top - margin.bottom;
@@ -30,26 +32,30 @@ x = d3.scaleBand()
       .rangeRound([0, width/3])
       .padding(0.1)
       .domain(carriers);
-y = d3.scaleLinear().rangeRound([height, 0]).domain([0, trips.length]);
+y = d3.scaleLinear().rangeRound([0, height]).domain([0, trips.length]);
 
 var ntrips = count_trip(trips)
 var bar = myHistogram.selectAll(".bar")
                       .data(ntrips)
                       .enter()
                       .append("g")
+                      .attr("transform", "translate(" + 0 + ","+ height+")")
+                      .attr("transform", "scale(" + 1 + ","+ -1+")")
                       .attr("class", "bar");
 
 bar.append("rect")
 .attr("x", function(d) { return x(d.carrier); })
-.attr("y", function(d) { return y(d.count); })
+.attr("y", -height)
 .attr("width", x.bandwidth())
-.attr("height", function(d) { return height - y(d.count); });
+.attr("height", function(d) { return y(d.count); })
+.attr("fill", function(d) {return c_scat(d.carrier)});
 
 bar.append("text")
   .attr("dy", ".90em")
-  .attr("y", function(d){ return y(d.count);})
+  .attr("y", function(d) { return height - y(d.count); })
   .attr("x", function(d) { return x(d.carrier) + x.bandwidth()/2; })
   .attr("text-anchor", "middle")
+  .attr("transform", "scale(" + 1 + ","+ -1+")")
   .text(function(d) { return d.count; });
 
 // add the x Axis
@@ -104,7 +110,6 @@ var maxPrice = d3.max(trips.map(
 //Plot scales
 x_scat =  d3.scaleLinear().rangeRound([0, width/2]).domain([0, maxDiff]);
 y_scat = d3.scaleLinear().rangeRound([height, 0]).domain([0, maxPrice]);
-c_scat = d3.scaleOrdinal().range(["orange", "red", "blue"]).domain(carriers);
 
 var xAxisGroup = myScatter.append("g")
                       .attr("class","axis")
@@ -136,18 +141,22 @@ myScatter.append("g")
 
 function brushMoved(){
   var screenSelection = d3.event.selection;
+  var selectedData = [];
   myScatter.selectAll("circle").style("fill", function(d){
     var x_pos = x_scat(diffDays(parseDate(d.start), parseDate(d.post)));
     var y_pos =  y_scat(d.price);
 
     if(screenSelection[0][0]<= x_pos && x_pos <= screenSelection[1][0] &&
 		   screenSelection[0][1]<= y_pos && y_pos <= screenSelection[1][1]){
+         selectedData.push(d);
          return "brown"
     }
     else{
         return c_scat(d.carrier);
     }
   });
+
+  myDispatch.call("selectionChanged",{caller:"scatter",items:selectedData});
 }
 
 function brushEnded(){
@@ -158,6 +167,34 @@ function brushEnded(){
       });
   }
 }
+
+function updateHist(trips){
+  var ntrips = count_trip(trips);
+  var oldBar =  myHistogram.selectAll(".bar")
+                  .data(ntrips);
+  //console.log(oldBar);
+  oldBar//.select("text")
+  .select("rect")
+  .transition()
+  .duration(300)
+  .attr("height", function(d) { return y(d.count); });
+
+  oldBar
+  .select("text")
+  .transition()
+  .duration(300)
+  .attr("y", function(d) { return height - y(d.count); })
+  .attr("x", function(d) { return x(d.carrier) + x.bandwidth()/2; })
+  .text(function(d) { return d.count; });
+
+}
+
+var myDispatch = d3.dispatch("selectionChanged");
+myDispatch.on("selectionChanged",function(){
+    if(this.caller === "scatter"){
+      updateHist(this.items);
+    }
+});
 
 // // add the y Axis
 // mySVG.append("g")
