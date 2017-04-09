@@ -163,6 +163,7 @@ function brushEnded(){
             return c_scat(d.carrier);
       });
       myDispatch.call("selectionChanged",{caller:"scatter",items:trips});
+      myDispatch.call("selectionChanged",{caller:"endbrush",items:trips});
   }
 }
 
@@ -192,16 +193,16 @@ function updateScatter(new_trips){
                       .selectAll("circle")
                       .data([]);
                     //  .enter();  //
-newScatter.exit().remove();
-  myScatter
-      .selectAll("circle")
-      .data(new_trips)
-      .enter()
-      .append("circle")
-      .attr("cx", function(d){ return x_scat(diffDays(parseDate(d.start), parseDate(d.post))); })
-      .attr("cy", function(d) { return y_scat(d.price); })
-      .attr("r", 2)
-      .attr("fill", function(d) { return c_scat(d.carrier);});
+  newScatter.exit().remove();
+    myScatter
+        .selectAll("circle")
+        .data(new_trips)
+        .enter()
+        .append("circle")
+        .attr("cx", function(d){ return x_scat(diffDays(parseDate(d.start), parseDate(d.post))); })
+        .attr("cy", function(d) { return y_scat(d.price); })
+        .attr("r", 2)
+        .attr("fill", function(d) { return c_scat(d.carrier);});
 };
 
 var myDispatch = d3.dispatch("selectionChanged");
@@ -234,6 +235,7 @@ myHistogram.selectAll(".bar").select("rect").on("click", function(d){
       }
       else{
         //Mostra todos
+    
           new_trips.push(i);
       }
     }
@@ -244,6 +246,10 @@ myHistogram.selectAll(".bar").select("rect").on("click", function(d){
 myDispatch.on("selectionChanged",function(){
     if(this.caller == "scatter"){
       updateHist(this.items);
+
+    }
+    else if(this.caller == "endbrush"){
+      updateScatter(this.items);
     }
 
 });
@@ -251,6 +257,8 @@ myDispatch.on("selectionChanged",function(){
 myDispatch2.on("clickHist", function(){
   if(this.caller == "show"){
     updateScatter(this.items);
+    updateHist(this.items);
+
   }
 });
 
