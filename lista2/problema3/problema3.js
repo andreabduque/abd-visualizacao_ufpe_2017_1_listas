@@ -14,7 +14,7 @@ var yAxis = d3.axisLeft(y).ticks(4).tickSize(-size*n).tickFormat(d3.format(".2s"
 // xAxisGroup.call(xAxis);
 // yAxisGroup.call(yAxis);
 
-var color = d3.scaleLinear().range(["#a50026","#313695"]);
+color = d3.scaleOrdinal(d3.schemeCategory10);
 
 //Reading data
 d3.json("egrid2010.json", function(egrid) {
@@ -23,6 +23,7 @@ d3.json("egrid2010.json", function(egrid) {
   var classes =  d3.map(egrid, function(d){
       return d.fuel;
     }).keys();
+
     classes.forEach(function(cl) {
       domainByFuel[cl] = egrid.filter(function(d){return d.fuel==cl;});
     });
@@ -88,8 +89,10 @@ d3.json("egrid2010.json", function(egrid) {
         .attr("cx", function(d) { return x(d[p.x]); })
         .attr("cy", function(d) { return y(d[p.y]); })
         .attr("r", 4)
-        .style("fill", function(d) { return color(d.fuel); });
-  }
+        .style("fill",
+            function(d) { return color(d.fuel);
+             });
+   }
 
 
 });
