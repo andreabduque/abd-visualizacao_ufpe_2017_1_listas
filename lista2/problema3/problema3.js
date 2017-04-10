@@ -1,6 +1,7 @@
 var width = 960,
     size = 184,
     padding = 35,
+    legend = 200,
     n = 5;
 
 var x = d3.scaleLinear()
@@ -17,7 +18,9 @@ var yAxis = d3.axisLeft(y).ticks(4).tickSize(-size*n).tickFormat(d3.format(".2s"
 color = d3.scaleOrdinal(d3.schemeCategory10);
 
 //Reading data
-d3.json("egrid2010.json", function(egrid) {
+d3.json("egrid2010.json", function(err, egrid) {
+
+  if(err) return;
 
   var domainByFuel = {};
   var classes =  d3.map(egrid, function(d){
@@ -37,7 +40,7 @@ d3.json("egrid2010.json", function(egrid) {
     });
 
     var mySVG = d3.select("body").append("svg")
-      .attr("width", size*n + padding)
+      .attr("width", 1200)
       .attr("height", size*n + padding)
       .append("g")
       .attr("transform", "translate(" + padding + "," + padding / 2 + ")");
@@ -85,15 +88,38 @@ d3.json("egrid2010.json", function(egrid) {
 
     cell.selectAll("circle")
         .data(egrid)
-        .enter().append("circle")
+        .enter()
+        .append("circle")
         .attr("cx", function(d) { return x(d[p.x]); })
         .attr("cy", function(d) { return y(d[p.y]); })
         .attr("r", 4)
         .style("fill",
             function(d) { return color(d.fuel);
-             });
+            });
    }
 
+  var legend = mySVG.selectAll(".legend")
+                    .data(classes)
+                    .enter()
+                    .append("g")
+                    .attr("class","legend")
+                    .attr("transform", function(d, i) { return "translate(" +1100 + "," + i*20+ ")"; })
+
+
+     // draw legend colored rectangles
+    legend.append("rect")
+        .attr("x", -18)
+        .attr("width", 18)
+        .attr("height", 18)
+        .style("fill", color);
+
+    // draw legend text
+    legend.append("text")
+        .attr("x", -24)
+        .attr("y", 9)
+        .attr("dy", ".35em")
+        .style("text-anchor", "end")
+        .text(function(d) { return d;})
 
 });
 
