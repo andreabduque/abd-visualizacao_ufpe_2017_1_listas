@@ -30,21 +30,46 @@ dropdown.selectAll("option")
 
 
 var margin = {top: 0, right: 0, bottom: 0, left: 0};
-var width = 1024 - margin.left - margin.right;
-var height = 800 - margin.top - margin.bottom;
+var width = 1300 - margin.left - margin.right;
+var height = 1000 - margin.top - margin.bottom;
 
 var svg = d3.select("body").append("svg")
 			       .attr("width", width + margin.left + margin.right)
 			      .attr("height", height + margin.top + margin.bottom);
+classes = ["setosa", "virginica", "versicolor"]
+colors = ["#1b9e77", "#d95f02", "#7570b3"]
+color_scale = d3.scaleOrdinal().range(colors).domain(classes);
 
-color_scale = d3.scaleOrdinal().range(["orange", "red", "blue"]).domain(["setosa", "virginica", "versicolor"]);
+var legend = svg.selectAll(".legend")
+                  .data(classes)
+                  .enter()
+                  .append("g")
+                  .attr("class","legend")
+                  .attr("transform", function(d, i) { return "translate(" +1100 + "," + i*20+ ")"; })
+
+
+   // draw legend colored rectangles
+  legend.append("rect")
+      .attr("x", -18)
+      .attr("width", 18)
+      .attr("height", 18)
+      .style("fill", color_scale);
+
+  // draw legend text
+  legend.append("text")
+      .attr("x", -24)
+      .attr("y", 9)
+      .attr("dy", ".35em")
+      .style("text-anchor", "end")
+      .text(function(d) { return d;})
+
 
 
 function gera_grafo(){
   var simulation = d3.forceSimulation()
       .force("link", d3.forceLink().id(function(d) { return d.id; }))
       .force("charge", d3.forceManyBody())
-      .force("center", d3.forceCenter(width / 2, height / 2));
+      .force("center", d3.forceCenter((width / 2) , (height/2)));
 
   K = d3.select("#select").node().value;
 
@@ -102,7 +127,7 @@ function gera_grafo(){
       .selectAll("line")
       .data(graph)
       .enter().append("line")
-      .attr("stroke-width", function(d) { return 5*d.value; });
+      .attr("stroke-width", function(d) { return 15*d.value/(K*0.5); });
 
 
     var node = svg.append("g")
@@ -110,7 +135,7 @@ function gera_grafo(){
         .selectAll("circle")
         .data(nodes)
         .enter().append("circle")
-        .attr("r", 5)
+        .attr("r", 8)
         .attr("fill", function(d) { return color_scale(d.color); })
         .call(d3.drag()
           .on("start", dragstarted)
