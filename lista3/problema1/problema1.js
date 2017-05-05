@@ -16,7 +16,7 @@ var button = d3.select("body")
                 .text("Calcular");
 
 neigh = []
-for(n = 5; n < 16; n++){
+for(n = 1; n < 16; n++){
   neigh.push(n)
 }
 
@@ -92,12 +92,17 @@ function gera_grafo(){
     d.fy = null;
   }
 
+  //Remove previous graph
+  svg.select(".links").remove()
+  svg.select(".nodes").remove()
+
+
   var link = svg.append("g")
       .attr("class", "links")
       .selectAll("line")
       .data(graph)
       .enter().append("line")
-      .attr("stroke-width", function(d) { return 10*d.value; });
+      .attr("stroke-width", function(d) { return 5*d.value; });
 
 
     var node = svg.append("g")
