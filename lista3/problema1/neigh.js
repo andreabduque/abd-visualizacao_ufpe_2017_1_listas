@@ -51,30 +51,3 @@ function kneighbors(data, ranges, k, i, item) {
 
   return near_neigh;
 }
-
-ranges = get_iris_range()
-graph = []
-for (let i = 0; i < iris.length; i++) {
-  kneigh = kneighbors(iris, ranges, 3, i, iris[i]);
-  graph = graph.concat(kneigh);
-}
-console.log(graph.length);
-
-graph = graph.reduce(
-  (list, x) => {
-    let put = true;
-
-    for (let element of list) {
-      if (x.source === element.target && x.target === element.source) {
-        put = false;
-        break;
-      }
-    }
-
-    if (put) {
-      list.push(x);
-    }
-
-    return list;
-  }
-, []);
