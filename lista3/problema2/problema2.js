@@ -28,6 +28,18 @@ var treemap = d3.treemap()
     "SECRETARIA DE JUVENTUDE E QUALIFICAÇÃO PROFISSIONAL"
   ]
 
+  var format = d3.formatLocale({
+  decimal: ".",
+  thousands: ",",
+  grouping: [3],
+  currency: ["R$", " "]
+  }).format("$,d");
+
+  var color = d3.scaleOrdinal()
+    .range(d3.schemeCategory10
+        .map(function(c) { c = d3.rgb(c); c.opacity = 0.6; return c; }))
+        .domain(categories);
+
 
 d3.csv("dados.csv", function(error, all_data) {
   if (error) throw error;
@@ -50,7 +62,8 @@ d3.csv("dados.csv", function(error, all_data) {
       .style("left", function(d) { return d.x0 + "px"; })
       .style("top", function(d) { return d.y0 + "px"; })
       .style("width", function(d) { return d.x1 - d.x0 + "px"; })
-      .style("height", function(d) { return d.y1 - d.y0 + "px"; });
+      .style("height", function(d) { return d.y1 - d.y0 + "px"; })
+      .style("background", function(d) { /*while (d.depth > 1)*/ d = d.parent.data.key; return color(d); });
 
     node.append("div")
         .attr("class", "node-label")
@@ -58,7 +71,7 @@ d3.csv("dados.csv", function(error, all_data) {
 
     node.append("div")
         .attr("class", "node-value")
-        .text(function(d) { return d.value; });
+        .text(function(d) { return format(d.value); });
   });
 
 
