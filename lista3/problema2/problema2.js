@@ -63,7 +63,7 @@ d3.csv("dados.csv", function(error, all_data) {
       .style("top", function(d) { return d.y0 + "px"; })
       .style("width", function(d) { return d.x1 - d.x0 + "px"; })
       .style("height", function(d) { return d.y1 - d.y0 + "px"; })
-      .style("background", function(d) { /*while (d.depth > 1)*/ d = d.parent.data.key; return color(d); });
+      .style("background", function(d) { while (d.depth > 1) d = d.parent.data.key; return color(d); });
 
     node.append("div")
         .attr("class", "node-label")
