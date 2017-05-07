@@ -17,6 +17,12 @@ var svg = d3.select("body")
     }))
     .append("g");
 
+
+var div = d3.select("body").append("div")
+    .attr("class", "tooltip")
+    .style("opacity", 0);
+
+
 d3.csv("us-ag-productivity-2004.csv", function(data) {
   var color = d3.scaleLinear().domain([ d3.min(data, function(d) { return d.value; }),d3.max(data, function(d) { return d.value; }) ])
         //	.range(["#e5f5f9","#2ca25f"]);
@@ -30,6 +36,7 @@ d3.csv("us-ag-productivity-2004.csv", function(data) {
                       var jsonState = json.features[j].properties.name;
                       if (dataState == jsonState) {
                         json.features[j].properties.value = dataValue;
+                        json.features[j].properties.state = dataState;
                         break;
                       }
                     }
@@ -41,9 +48,37 @@ d3.csv("us-ag-productivity-2004.csv", function(data) {
                   .enter()
                   .append("path")
                   .attr("d", path)
+                  .style("stroke", "#fff")
+	                .style("stroke-width", "1")
                   .style("fill", function(d){
                     var value = d.properties.value;
-                    return color(value);
+                    if(value){
+                      c = color(value)
+                    }else{
+                        c = "rgb(213,222,217)"
+                    }
+                    return c;
+                  })
+                  .on("mouseover", function(d) {
+                      	div.transition()
+                      	   .duration(200)
+                           .style("opacity", .9);
+
+                        if(d.properties.state &&  d.properties.value){
+                          tipText = d.properties.state + " \n " + d.properties.value
+                        }
+                        else{
+                          tipText = "No data available"
+                        }
+                         div.text(tipText)
+                         .style("left", (d3.event.pageX) + "px")
+                         .style("top", (d3.event.pageY - 28) + "px");
+	                  })
+                    // fade out tooltip on mouse out
+                  .on("mouseout", function(d) {
+                      div.transition()
+                         .duration(500)
+                         .style("opacity", 0);
                   });
           })
 })

@@ -8,7 +8,7 @@ var width = 1000,
 var nest = d3.nest()
   .key(function(d) { return d.orgao_nome; })
   .key(function(d) { return d.unidade_nome; })
-  .rollup(function(d) { return d3.sum(d, function(d) { return Math.abs(parseFloat(d.valor_pago.replace(',', '.'))); }); });
+  .rollup(function(d) { return d3.sum(d, function(d) { return parseFloat(d.valor_pago.replace(',', '.')); }); });
 
 var treemap = d3.treemap()
   .size([width, height])
@@ -40,6 +40,10 @@ var treemap = d3.treemap()
         .map(function(c) { c = d3.rgb(c); c.opacity = 0.6; return c; }))
         .domain(categories);
 
+  var div = d3.select("body").append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
+
 
 d3.csv("dados.csv", function(error, all_data) {
   if (error) throw error;
@@ -63,7 +67,22 @@ d3.csv("dados.csv", function(error, all_data) {
       .style("top", function(d) { return d.y0 + "px"; })
       .style("width", function(d) { return d.x1 - d.x0 + "px"; })
       .style("height", function(d) { return d.y1 - d.y0 + "px"; })
-      .style("background", function(d) { while (d.depth > 1) d = d.parent.data.key; return color(d); });
+      .style("background", function(d) { while (d.depth > 1) d = d.parent.data.key; return color(d); })
+      .on("mouseover", function(d) {
+            div.transition()
+               .duration(200)
+               .style("opacity", 1);
+
+             div.text( d.parent.data.key + "\n" + (d.data.key).split(" - ")[1] + "\n" + format(d.value))
+             .style("left", (d3.event.pageX) + "px")
+             .style("top", (d3.event.pageY - 28) + "px");
+        })
+        // fade out tooltip on mouse out
+      .on("mouseout", function(d) {
+          div.transition()
+             .duration(500)
+             .style("opacity", 0);
+      });
 
     node.append("div")
         .attr("class", "node-label")
